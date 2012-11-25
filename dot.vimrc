@@ -93,13 +93,13 @@ Bundle 'Shougo/unite.vim'
 Bundle 'unite-colorscheme'
 Bundle 'h1mesuke/unite-outline'
 Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neocomplcache-snippets-complete'
+Bundle 'Shougo/neosnippet'
 Bundle 'Shougo/vimfiler'
 Bundle 'Shougo/vimshell'
 Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vinarise'
 Bundle 'project.tar.gz'
-Bundle 'quickrun.vim'
+Bundle 'thinca/vim-quickrun'
 Bundle 'quickhl.vim'
 Bundle 'taglist.vim'
 Bundle 'open-browser.vim'
@@ -114,6 +114,11 @@ Bundle 'hier'
 Bundle 'learn-vimscript'
 Bundle 'vim-jp/vital.vim'
 Bundle 'increment.vim'
+Bundle 'mattn/gist-vim'
+Bundle 'mattn/webapi-vim'
+Bundle 'CCTree'
+Bundle 'osyo-manga/shabadou.vim'
+Bundle 'osyo-manga/vim-watchdogs'
 "Bundle 'Lokaltog/vim-powerline'
 
 filetype plugin on
@@ -311,10 +316,39 @@ let g:increment_vim = { 'vim':["let", "function", "endfunction", "if", "else", "
       \ }
 "}}}
 
+" ============== Gist.vim setting ==================== {{{2
+"}}}
+
+" ============== vim-watchdogs setting ==================== {{{2
+let g:watchdogs_check_BufWritePost_enable = 1
+
+let g:quickrun_config = {
+      \ "watchdogs_checker/_" : {
+      \     "hook/unite_quickfix/enable" : 0,
+      \     "hook/echo/enable" : 0,
+      \     "hook/close_unite_quickfix/enable" : 0,
+      \     "hook/close_baffer/enable_exit" : 0,
+      \     "hook/close_quickfix/enable_exit" : 1,
+      \     "hook/back_baffer/enable" : 0,
+      \     "hook/redraw_unite_quickfix/enable_exit" : 0
+      \ },
+      \ "cpp/watchdogs_checker" : {
+      \     "hook/add_include_option/enable" : 1,
+      \     "type" : "watchdogs_checker/clang++",
+      \ },
+      \ "watchdogs_checker/clang++" : {
+      \     "command"   : "/opt/local/bin/clang++-mp-3.1",
+      \     "exec" : "%c %o --std=c++11 -Wall -fsyntax-only %s:p ",
+      \},
+\}
+
+call watchdogs#setup(g:quickrun_config)
+"}}}
+
 "}}}
 
 
-
+"-------------------------------------------------------------
 " Function and Command Defined {{{1
 "-------------------------------------------------------------
 
@@ -506,8 +540,8 @@ nnoremap <Space>ds :<C-u>call DictionalSearch()<Return>
 "}}}
 
 " ============== improved increment  setting ==================== {{{2
-nnoremap <silent> <C-a> :<C-u>NextPattern<Return>
-nnoremap <silent> <C-x> :<C-u>PrevPattern<Return>
+nnoremap <silent> <C-a> :NextPattern<Return>
+nnoremap <silent> <C-x> :PrevPattern<Return>
 "}}}
 
 " ============== cscope setting ==================== {{{2

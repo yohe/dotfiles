@@ -119,7 +119,6 @@ Bundle 'mattn/webapi-vim'
 Bundle 'CCTree'
 Bundle 'osyo-manga/shabadou.vim'
 Bundle 'osyo-manga/vim-watchdogs'
-"Bundle 'thinca/vim-showtime'
 "Bundle 'Lokaltog/vim-powerline'
 
 filetype plugin on
@@ -325,7 +324,13 @@ let g:watchdogs_check_BufWritePost_enable = 1
 
 let g:quickrun_config = {
       \ "watchdogs_checker/_" : {
+      \     "hook/unite_quickfix/enable" : 0,
+      \     "hook/echo/enable" : 0,
+      \     "hook/close_unite_quickfix/enable" : 0,
+      \     "hook/close_baffer/enable_exit" : 0,
       \     "hook/close_quickfix/enable_exit" : 1,
+      \     "hook/back_baffer/enable" : 0,
+      \     "hook/redraw_unite_quickfix/enable_exit" : 0
       \ },
       \ "cpp/watchdogs_checker" : {
       \     "hook/add_include_option/enable" : 1,
@@ -333,20 +338,13 @@ let g:quickrun_config = {
       \ },
       \ "watchdogs_checker/clang++" : {
       \     "command"   : "/opt/local/bin/clang++-mp-3.1",
-      \     "exec" : "%c %o --std=c++11 -I ./ -Wall -fsyntax-only %s:p ",
+      \     "exec" : "%c %o --std=c++11 -Wall -fsyntax-only %s:p ",
       \},
 \}
 
 call watchdogs#setup(g:quickrun_config)
 "}}}
 
-" ============== project setting ==================== {{{2
-
-" Project window size
-let g:proj_window_width = 40
-let g:proj_flags="bimst"
-"}}}
-"
 "}}}
 
 
@@ -554,10 +552,6 @@ nnoremap <Leader>cf :<C-u>cscope find f <C-R><C-W><Return>
 nnoremap <Leader>ci :<C-u>cscope find i <C-R><C-P><Return>
 nnoremap <Leader>cg :<C-u>cscope find g <C-R><C-W><Return>
 nnoremap <Leader>cs :<C-u>cscope find s <C-R><C-W><Return>
-"}}}
-
-" ============== project setting ==================== {{{2
-nmap <silent> <Space><Space> <Plug>ToggleProject
 "}}}
 
 " "]" , "[" の動作は行頭に "}", "{" が無いと適切に動作しないので、

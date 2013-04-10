@@ -70,7 +70,7 @@ set nrformats=
 
 set modeline
 set modelines=5
-
+set completeopt-=preview
 "}}}
 
 
@@ -103,17 +103,18 @@ Bundle 'thinca/vim-quickrun'
 Bundle 'quickhl.vim'
 Bundle 'taglist.vim'
 Bundle 'open-browser.vim'
-Bundle 'OmniCppComplete'
+"Bundle 'OmniCppComplete'
+Bundle 'Rip-Rip/clang_complete'
 Bundle 'thinca/vim-ref'
 Bundle 'mojako/ref-sources.vim'
 Bundle 'vimwiki'
 Bundle 'fuenor/qfixhowm'
 Bundle 'taku-o/vim-toggle'
-Bundle 'Color-Sampler-Pack'
+Bundle 'vim-scripts/Colour-Sampler-Pack'
 Bundle 'hier'
 Bundle 'learn-vimscript'
 Bundle 'vim-jp/vital.vim'
-Bundle 'increment.vim'
+"Bundle 'increment.vim'
 Bundle 'mattn/gist-vim'
 Bundle 'mattn/webapi-vim'
 Bundle 'CCTree'
@@ -151,19 +152,82 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " 選択している候補のキャンセル
 inoremap <expr><C-e> neocomplcache#cancel_popup()
 
-" Enable omni completion
-"autocmd FileType c setlocal omnifunc=ccomplete#Complete
-"autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-
 " Examples:
 if !exists('g:neocomplcache_omni_patterns')
     let g:neocomplcache_omni_patterns = {}
 endif
-:let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-:let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-:let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-:let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
+let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
+if !exists('g:neocomplcache_force_omni_patterns')
+  let g:neocomplcache_force_omni_patterns = {}
+endif
+let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\'
+
+"}}}
+
+" =============== Unite Setting =========== {{{2
+let g:unite_source_menu_menus = {}
+let g:unite_source_menu_menus.vimrc = {
+      \     'description' : 'Edit vimrc',
+      \ }
+let g:unite_source_menu_menus.vimrc.candidates = {
+      \   '~/.vimrc'      : 'edit ~/.vimrc',
+      \   '~/.gvimrc'      : 'edit ~/.gvimrc',
+      \ }
+function g:unite_source_menu_menus.vimrc.map(key, value)
+  return {
+      \       'word' : a:key, 'kind' : 'command',
+      \       'action__command' : a:value,
+      \  }
+endfunction
+
+let g:unite_source_menu_menus.grep= {
+      \     'description' : 'Search keyword.',
+      \ }
+let g:unite_source_menu_menus.grep.candidates = {
+      \   'buffer'    : 'Unite grep:%:: -auto-preview -start-insert',
+      \   'buffer all'    : 'Unite grep:$buffers:: -auto-preview -start-insert',
+      \   'directory'    : 'Unite grep::: -auto-preview -start-insert',
+      \ }
+function g:unite_source_menu_menus.grep.map(key, value)
+  return {
+      \       'word' : a:key, 'kind' : 'command',
+      \       'action__command' : a:value,
+      \  }
+endfunction
+
+let g:unite_source_menu_menus.open_file= {
+      \     'description' : 'Open file',
+      \ }
+let g:unite_source_menu_menus.open_file.candidates = {
+      \   'file'    : 'Unite file_ref/async -auto-preview -start-insert',
+      \   'file mru'    : 'Unite file_mru -auto-preview -start-insert',
+      \   'bookmark'    : 'Unite bookmark',
+      \   'find'    : 'Unite find',
+      \ }
+function g:unite_source_menu_menus.open_file.map(key, value)
+  return {
+      \       'word' : a:key, 'kind' : 'command',
+      \       'action__command' : a:value,
+      \  }
+endfunction
+
+let g:unite_source_menu_menus.tools= {
+      \     'description' : 'Tools',
+      \ }
+let g:unite_source_menu_menus.tools.candidates = {
+      \   'outline'    : 'Unite outline',
+      \   'taglist'    : 'Tlist',
+      \ }
+function g:unite_source_menu_menus.tools.map(key, value)
+  return {
+      \       'word' : a:key, 'kind' : 'command',
+      \       'action__command' : a:value,
+      \  }
+endfunction
 
 "}}}
 
@@ -346,7 +410,12 @@ call watchdogs#setup(g:quickrun_config)
 let g:proj_window_width = 40
 let g:proj_flags="bimst"
 "}}}
-"
+
+" ============== clang_completesetting ==================== {{{2
+
+let g:clang_complete_auto=0
+"}}}
+
 "}}}
 
 
@@ -542,8 +611,8 @@ nnoremap <Space>ds :<C-u>call DictionalSearch()<Return>
 "}}}
 
 " ============== improved increment  setting ==================== {{{2
-nnoremap <silent> <C-a> :NextPattern<Return>
-nnoremap <silent> <C-x> :PrevPattern<Return>
+"nnoremap <silent> <C-a> :NextPattern<Return>
+"nnoremap <silent> <C-x> :PrevPattern<Return>
 "}}}
 
 " ============== cscope setting ==================== {{{2
@@ -560,6 +629,13 @@ nnoremap <Leader>cs :<C-u>cscope find s <C-R><C-W><Return>
 nmap <silent> <Space><Space> <Plug>ToggleProject
 "}}}
 
+" ============== project setting ==================== {{{2
+nmap <leader>f [unite]
+nnoremap [unite]m   :<C-u>Unite menu<CR>
+"}}}
+
+nmap <silent> <Space><Space> <Plug>ToggleProject
+"}}}
 " "]" , "[" の動作は行頭に "}", "{" が無いと適切に動作しないので、
 " 行頭でなくても動作するように変更する. 
 " "See :help [["
@@ -568,7 +644,7 @@ nmap <silent> <Space><Space> <Plug>ToggleProject
 :map ]] j0[[%/{<CR>
 :map [] k$][%?}<CR>
 
-map Q gq
+"map Q gq
 
 inoremap <C-U> <C-G>u<C-U>
 

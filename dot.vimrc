@@ -55,7 +55,7 @@ set ttymouse=xterm
 
 " set statusline
 set laststatus=2
-set statusline=%<%f%y\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+set statusline=%<%f%y[%{&fenc}:%{&ff}]\ %h%m%r%=%-14.(%l-%L:%c%V%)\ %P
 
 set listchars=tab:>.,trail:-,eol:$,nbsp:%
 

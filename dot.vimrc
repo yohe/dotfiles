@@ -92,8 +92,8 @@ Bundle 'textobj-fold'
 Bundle 'Shougo/unite.vim'
 Bundle 'unite-colorscheme'
 Bundle 'h1mesuke/unite-outline'
+Bundle 'Shougo/neosnippet.vim'
 Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neosnippet'
 Bundle 'Shougo/vimfiler'
 Bundle 'Shougo/vimshell'
 Bundle 'Shougo/vimproc'
@@ -122,6 +122,7 @@ Bundle 'osyo-manga/shabadou.vim'
 Bundle 'osyo-manga/vim-watchdogs'
 "Bundle 'thinca/vim-showtime'
 "Bundle 'Lokaltog/vim-powerline'
+Bundle 'vim-jp/cpp-vim'
 
 filetype plugin on
 filetype plugin indent on
@@ -358,11 +359,6 @@ call vimfiler#set_execute_file('html', 'firefox')
 
 "}}}
 
-" ============== OmniCppComplete setting ==================== {{{2
-"let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-
-"}}}
-
 " ============== hier.vim setting ==================== {{{2
 let g:hier_highlight_group_qf   = 'SpellBad'
 let g:hier_highlight_group_qfw  = 'SpellLocal'
@@ -565,8 +561,10 @@ noremap ,cY "*Y
 "}}}
 
 " ============== NeoCompleteCache Keybind setting ==================== {{{2
-imap <C-l>    <Plug>(neocomplcache_snippets_expand)
-smap <C-l>    <Plug>(neocomplcache_snippets_expand)
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
 "}}}
 
 " ============== quickhl.vim Keybind setting ==================== {{{2

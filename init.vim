@@ -64,6 +64,10 @@ if has('gui_macvim')
     source $MYGVIMRC
 endif
 
+if has('nvim')
+  tnoremap <silent> <ESC> <C-\><C-n>
+endif
+
 " インクリメントのフォーマットを10進固定にする
 " set nrformats=octal,hex (デフォルト設定) etc: alpha
 set nrformats=
@@ -79,94 +83,59 @@ set clipboard+=unnamed
 " Plugin Setting {{{1
 "-------------------------------------------------------------
 
-" ==================== vundle setting ================ {{{2
-"set nocompatible;
-filetype off
-set rtp+=~/.vim/vundle.git/
-call vundle#rc()
-Bundle 'gmarik/vundle'
-Bundle 'surround.vim'
-Bundle 'textobj-user'
-"Bundle 'textobj-function'
-Bundle 'textobj-fold'
-"Bundle 'kana/vim-smartinput'
-Bundle 'Shougo/unite.vim'
-Bundle 'unite-colorscheme'
-Bundle 'h1mesuke/unite-outline'
-Bundle 'Shougo/neosnippet.vim'
-Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/vimfiler'
-Bundle 'Shougo/vimshell'
-Bundle 'Shougo/vimproc'
-Bundle 'Shougo/vinarise'
-Bundle 'project.tar.gz'
-Bundle 'thinca/vim-quickrun'
-"Bundle 'quickhl.vim'
-Bundle 'taglist.vim'
-Bundle 'open-browser.vim'
-"Bundle 'OmniCppComplete'
-Bundle 'Rip-Rip/clang_complete'
-Bundle 'thinca/vim-ref'
-Bundle 'mojako/ref-sources.vim'
-Bundle 'vimwiki'
-"Bundle 'fuenor/qfixhowm'
-Bundle 'taku-o/vim-toggle'
-Bundle 'vim-scripts/Colour-Sampler-Pack'
-Bundle 'hier'
-"Bundle 'learn-vimscript'
-Bundle 'vim-jp/vital.vim'
-"Bundle 'increment.vim'
-Bundle 'mattn/gist-vim'
-Bundle 'mattn/webapi-vim'
-Bundle 'CCTree'
-Bundle 'osyo-manga/shabadou.vim'
-Bundle 'osyo-manga/vim-watchdogs'
-"Bundle 'thinca/vim-showtime'
-"Bundle 'Lokaltog/vim-powerline'
-"Bundle 'cpp-vim'
+" ==================== dein setting ================ {{{2
+if &compatible
+  set nocompatible
+endif
+set runtimepath+=/Users/sekiguchi/.config/nvim/bundle/Shougo/dein.vim/
 
-filetype plugin on
+call dein#begin("/Users/sekiguchi/.config/nvim/bundle")
+
+call dein#add("Shougo/dein.vim")
+call dein#add("Shougo/deoplete.nvim")
+call dein#add('vim-scripts/Colour-Sampler-Pack')
+call dein#add('surround.vim')
+call dein#add('textobj-user')
+call dein#add('textobj-fold')
+call dein#add('vim-jp/vital.vim')
+call dein#add('mattn/gist-vim')
+call dein#add('mattn/webapi-vim')
+call dein#add('vim-scripts/CCTree')
+call dein#add('osyo-manga/shabadou.vim')
+call dein#add('osyo-manga/vim-watchdogs')
+call dein#add('kassio/neoterm')
+call dein#add('vim-scripts/project.tar.gz')
+call dein#add('Shougo/unite.vim')
+call dein#add('thinca/vim-quickrun')
+call dein#add('vim-scripts/open-browser.vim')
+call dein#add('Shougo/vimfiler')
+call dein#add('Shougo/neomru.vim')
+call dein#add('Shougo/denite.nvim')
+call dein#add('zchee/deoplete-clang')
+
+call dein#end()
+
 filetype plugin indent on
+syntax enable
+
 "}}}
 "==================================================================
 " プラグインの設定はこれ以降に記載する
 "==================================================================
 
+" =============== Deoplete Setting =========== {{{2
+let g:deoplete#enable_at_startup=1
+" Use smartcase.
+let g:deoplete#enable_smart_case = 1
 
-" =============== NeoCompleteCache Setting =========== {{{2
-:let g:neocomplcache_enable_at_startup = 1
-:let g:neocomplcache_min_syntax_length = 3
-" キー入力時に保管を行う入力数
-"let g:neocomplcache_auto_completion_start_length = 4
-"let g:neocomplcache_manual_completion_start_length = 4
+let g:deoplete#auto_complete_start_length=4
+
+"let g:deoplete#omni_patterns = {}
+"let g:deoplete#omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
 " 補完候補の中から共通部分を保管
-inoremap <expr><C-Space>    neocomplcache#complete_common_string()
-inoremap <expr><C-j>        neocomplcache#complete_common_string()
-
-" 文字削除時にポップアップを削除する
-"inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-"inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-
-" 選択している候補の確定
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-
-" 選択している候補のキャンセル
-inoremap <expr><C-e> neocomplcache#cancel_popup()
-
-" Examples:
-if !exists('g:neocomplcache_omni_patterns')
-    let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-if !exists('g:neocomplcache_force_omni_patterns')
-  let g:neocomplcache_force_omni_patterns = {}
-endif
-let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\'
+inoremap <expr><C-h>        deoplete#smart_close_popup() . "\<C-h>"
+inoremap <expr><BS>        deoplete#smart_close_popup() . "\<C-h>"
 
 "}}}
 
@@ -208,7 +177,6 @@ let g:unite_source_menu_menus.open_file.candidates = {
       \   'file'    : 'Unite file_ref/async -auto-preview -start-insert',
       \   'file mru'    : 'Unite file_mru -auto-preview -start-insert',
       \   'bookmark'    : 'Unite bookmark',
-      \   'find'    : 'Unite find',
       \ }
 function g:unite_source_menu_menus.open_file.map(key, value)
   return {
@@ -233,114 +201,6 @@ endfunction
 
 "}}}
 
-" ================ colorscheme ======================= {{{2
-let g:molokai_original = 1
-
-"}}}
-
-" ============== VimShell Setting ==================== {{{2
-let g:vimshell_split_command = ""
-"let g:vimshell_no_default_keymappings = 1
-inoremap <C-w><C-w> <ESC><C-w>w
-inoremap <C-w>j <ESC><C-w>j
-inoremap <C-w>k <ESC><C-w>k
-inoremap <C-w>l <ESC><C-w>l
-inoremap <C-w>h <ESC><C-w>h
-
-let g:vimshell_user_prompt = 'getcwd()'
-"let g:vimshell_right_prompt = 'vcs#info("(%s)-[%b]", "(%s)-[%b|%a]")'
-let g:vimshell_prompt = $USER." $ "
-
-"}}}
-
-" ================== VimWiki setting ================= {{{2
-
-" VimWiki設定
-let wiki_1 = {}
-let wiki_1.path = '~/.howm/Wiki/'
-let wiki_1.path_html = '~/vimwiki_html/'
-
-let g:vimwiki_list = [wiki_1]
-let g:vimwiki_folding = 1
-
-"}}}
-
-" ============== vimwiki calender ==================== {{{2
-let g:vimwiki_use_calendar=1
-
-"}}}
-
-" ============== QFixHowm setting ==================== {{{2
-" デフォルトのhowmバッファ以外を使用する
-"let QFixHowm_HowmMode = 0
-
-" ディレクトリ設定
-let howm_dir = '~/.howm'
-let QFixHowm_TagsDir = howm_dir
-
-let QFixHowm_OpenURICcmd = '!open %s'
-
-" オートリンクでファイルを開く, and TagJampFile Create
-let QFixHowm_Wiki = 1
-let QFixHowm_UseAutLinkTags = 1
-
-let QFixHowm_ShowSchedule = 15
-let QFixHowm_ShowScheduleTodo = 7
-" 予定にリマインダも表示
-let QFixHowm_ListReminder_ScheExt = '[-@!.]'
-
-"一日一回　予定自動表示
-"let QFixHowm_VimEnterCmd = 'y'
-"let QFixHowm_VimEnterMsg = '今日の予定を表示します'
-let QFixHowm_Wiki = 1
-
-let QFixHowm_DiaryFile = '~/.howm/Wiki/diary/%Y-%m-%d.wiki'
-
-"新規エントリのテンプレート
-let QFixHowm_Template = [
-  \"= %TITLE% %TAG%",
-  \""
-\]
-
-" Howm2Html setting {{{3
-" ディレクトリ設定
-let HowmHtml_basedir = howm_dir
-let HowmHtml_htmldir = '~/.howm_html'
-let HowmHtml_publish_htmldir = '~/.howm_html'
-let HowmHtml_RelPath = HowmHtml_htmldir
-let HowmHtml_publish_RelPath = HowmHtml_publish_htmldir
-
-" Page Setting
-let QFixHowm_Title = '='
-let HowmHtml_Bullet = ' § '
-let HowmHtml_DefaultName = 'howm2html.html'
-let HowmHtml_ConvertLevel = 2
-let HowmHtml_suffix = 'html'
-let HowmHtml_suffix_mode = ':t:r'
-let HowmHtml_encoding = 'utf-8'
-let HowmHtml_cssname = 'vicuna.css'
-let HowmHtml_Vicuna = 'eye-h double-l'
-let HowmHtml_SightName = "Yohei Sekigchi"
-let HowmHtml_Description = 'ローカルブログ'
-
-"サイドバー
-let HowmHtml_Entries = [
-  \ '<dt>リンク</dt><dd><ul>',
-  \ '<li><a href="%BASEDIR%/howm2html.html" title="HOME">ホーム</a></li>',
-  \ '<ul></dd>',
-  \ '<dt>Entries</dt><dd><ul>',
-\]
-
-let g:HowmHtml_Others = [
-  \ '<dt>過去ログ</dt><dd><ul>',
-  \ '<li><a href="%BASEDIR%/archives/2010.html" title="2010">2010</a></li>',
-  \ '</ul></dd>',
-\]
-
-"}}}
-
-"}}}
-
 " ============== quickrun setting ==================== {{{2
 let g:quickrun_config = {}
 let g:quickrun_config['markdown'] = {
@@ -355,20 +215,6 @@ let g:quickrun_config['markdown'] = {
 let g:vimfiler_as_default_explorer = 1
 call vimfiler#set_execute_file('html', 'firefox')
 
-"}}}
-
-" ============== hier.vim setting ==================== {{{2
-let g:hier_highlight_group_qf   = 'SpellBad'
-let g:hier_highlight_group_qfw  = 'SpellLocal'
-let g:hier_highlight_group_qfi  = 'SpellRare'
-
-"}}}
-
-" ============== increment.vim setting ==================== {{{2
-let g:increment_vim = {}
-let g:increment_vim = { 'vim':["let", "function", "endfunction", "if", "else", "elseif", "endif"], 
-      \                 'cpp':["class", "struct", "public", "protected", "private", "if", "else", "==", "!=", "<=", ">=", ">", "<"], 
-      \ }
 "}}}
 
 " ============== vim-watchdogs setting ==================== {{{2
@@ -398,9 +244,9 @@ let g:proj_window_width = 40
 let g:proj_flags="bimst"
 "}}}
 
-" ============== clang_completesetting ==================== {{{2
-let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/"
-let g:clang_complete_auto=0
+" ============== deoplete clang ==================== {{{2
+let g:deoplete#sources#clang#libclang_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib"
+let g:deoplete#sources#clang#clang_header="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/"
 "}}}
 
 "}}}
@@ -409,6 +255,11 @@ let g:clang_complete_auto=0
 "-------------------------------------------------------------
 " Function and Command Defined {{{1
 "-------------------------------------------------------------
+
+" ======================= Dein command ==================== {{{2
+command! DeinInstall :call dein#install()
+command! DeinCheck :call dein#install()
+"}}}
 
 " ======================= Scouter ==================== {{{2
 function! Scouter(file, ...)
@@ -523,7 +374,7 @@ nnoremap <Space>r   :<C-u>registers<Return>
 "}}}
 
 " ============== help setting ==================== {{{2
-nnoremap <C-h>      :<C-u>help<Space>
+nnoremap <C-h>     :<C-u>help<Space>
 "}}}
 
 " ============== tab Keybind setting ==================== {{{2
@@ -544,30 +395,8 @@ nnoremap tn :<C-u>tnext<Return>
 nnoremap tp :<C-u>tprevious<Return>
 "}}}
 
-" ============== copy and paste for clipborad setting ==================== {{{2
-noremap ,cp "*p
-noremap ,cP "*P
-noremap ,cy "*y
-noremap ,cY "*Y
-"}}}
-
-" ============== NeoCompleteCache Keybind setting ==================== {{{2
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-"}}}
-
-" ============== quickhl.vim Keybind setting ==================== {{{2
-nmap <Space>h <Plug>(quickhl-toggle)
-xmap <Space>h <Plug>(quickhl-toggle)
-nmap <Space>H <Plug>(quickhl-reset)
-xmap <Space>H <Plug>(quickhl-reset)
-nmap <Space>j <Plug>(quickhl-match)
-"}}}
-
-" ============== highlighting Clear setting ==================== {{{2
-nmap <silent><ESC><ESC> :<C-u>call AllHighlightClear()<Return>
+" ============== Taglist.vim setting setting ==================== {{{2
+nnoremap <Leader>t  :<C-u>Tlist<Return>
 "}}}
 
 " ============== QuickFix Keymapping setting ==================== {{{2
@@ -582,8 +411,15 @@ nnoremap qo :<C-u>copen<Return>
 nnoremap qc :<C-u>cclose<Return>
 "}}}
 
-" ============== Taglist.vim setting setting ==================== {{{2
-nnoremap <Leader>t  :<C-u>Tlist<Return>
+" ============== QuickRun setting setting ==================== {{{2
+nnoremap <Space>q :<C-u>QuickRun<Return>
+"}}}
+
+" ============== copy and paste for clipborad setting ==================== {{{2
+noremap ,cp "*p
+noremap ,cP "*P
+noremap ,cy "*y
+noremap ,cY "*Y
 "}}}
 
 " ============== colorschme change setting ==================== {{{2
@@ -591,27 +427,28 @@ nnoremap <silent><F2>   :<C-u>call ColorRoller.roll()<Return>
 nnoremap <silent><F3>   :<C-u>call ColorRoller.unroll()<Return>
 "}}}
 
-" ============== QuickRun setting setting ==================== {{{2
-nnoremap <Space>q :<C-u>QuickRun<Return>
-"}}}
-
 " ============== 辞書を引く setting ==================== {{{2
 nnoremap <Space>ds :<C-u>call DictionalSearch()<Return>
-"}}}
-
-" ============== improved increment  setting ==================== {{{2
-"nnoremap <silent> <C-a> :NextPattern<Return>
-"nnoremap <silent> <C-x> :PrevPattern<Return>
 "}}}
 
 " ============== cscope setting ==================== {{{2
 nnoremap <Leader>cc :<C-u>cscope find c <C-R><C-W><Return>
 nnoremap <Leader>cd :<C-u>cscope find d <C-R><C-W><Return>
-nnoremap <Leader>ce :<C-u>cscope find e 
+nnoremap <Leader>ce :<C-u>cscope find e
 nnoremap <Leader>cf :<C-u>cscope find f <C-R><C-W><Return>
 nnoremap <Leader>ci :<C-u>cscope find i <C-R><C-P><Return>
 nnoremap <Leader>cg :<C-u>cscope find g <C-R><C-W><Return>
 nnoremap <Leader>cs :<C-u>cscope find s <C-R><C-W><Return>
+"}}}
+
+" ============== 関数移動 ==================== {{{2
+" "]" , "[" の動作は行頭に "}", "{" が無いと適切に動作しないので、
+" 行頭でなくても動作するように変更する. 
+" "See :help [["
+:map [[ ?{<CR>w99[{
+:map ][ /}<CR>b99]}
+:map ]] j0[[%/{<CR>
+:map [] k$][%?}<CR>
 "}}}
 
 " ============== project setting ==================== {{{2
@@ -623,15 +460,10 @@ nmap <leader>f [unite]
 nnoremap [unite]m   :<C-u>Unite menu<CR>
 "}}}
 
-" "]" , "[" の動作は行頭に "}", "{" が無いと適切に動作しないので、
-" 行頭でなくても動作するように変更する. 
-" "See :help [["
-:map [[ ?{<CR>w99[{
-:map ][ /}<CR>b99]}
-:map ]] j0[[%/{<CR>
-:map [] k$][%?}<CR>
-
-"map Q gq
+" ============== terminal setting ==================== {{{2
+nnoremap <Space>to :<C-u>Topen<return>
+nnoremap <Space>tc :<C-u>Tclose<return>
+"}}}
 
 inoremap <C-U> <C-G>u<C-U>
 

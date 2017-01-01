@@ -35,6 +35,16 @@ set nocompatible
 set backspace=indent,eol,start
 set t_Co=256
 
+"-------------------------------------------
+" 変数定義 {{{2
+"-------------------------------------------
+let s:backup_dir = expand("~/.config/nvim/vim_backup")
+let s:swap_dir = expand("~/.config/nvim/vim_swap")
+let s:plugins_dir = expand('~/.config/nvim/bundle')
+let s:dein_dir = s:plugins_dir . '/Shougo/dein.vim'
+
+"}}}
+
 if has('mouse')
   set mouse=a
 endif
@@ -44,11 +54,17 @@ if &t_Co > 2 || has("gui_running")
   set hlsearch
 endif
 
-" backup
+" backup and swap
+if !isdirectory(s:backup_dir)
+  call mkdir(s:backup_dir)
+endif
 set backup
-set backupdir=~/.vim/vim_backup
+execute 'set backupdir='.s:backup_dir
+if !isdirectory(s:swap_dir)
+  call mkdir(s:swap_dir)
+endif
 set swapfile
-set directory=~/.vim/vim_swap
+execute 'set directory='.s:swap_dir
 
 syntax enable
 "set ttymouse=xterm
@@ -87,9 +103,9 @@ set clipboard+=unnamed
 if &compatible
   set nocompatible
 endif
-set runtimepath+=/Users/sekiguchi/.config/nvim/bundle/Shougo/dein.vim/
+execute 'set runtimepath+=' . s:dein_dir
 
-call dein#begin("/Users/sekiguchi/.config/nvim/bundle")
+call dein#begin(s:plugins_dir)
 
 call dein#add("Shougo/dein.vim")
 call dein#add("Shougo/deoplete.nvim")
@@ -111,6 +127,7 @@ call dein#add('vim-scripts/open-browser.vim')
 call dein#add('Shougo/vimfiler')
 call dein#add('Shougo/neomru.vim')
 call dein#add('Shougo/denite.nvim')
+call dein#add('Shougo/vimproc')
 call dein#add('zchee/deoplete-clang')
 
 call dein#end()
@@ -245,8 +262,14 @@ let g:proj_flags="bimst"
 "}}}
 
 " ============== deoplete clang ==================== {{{2
-let g:deoplete#sources#clang#libclang_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib"
-let g:deoplete#sources#clang#clang_header="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/"
+if has('mac')
+  let g:deoplete#sources#clang#libclang_path="/Applications/Xcode.app/COntents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib"
+  let g:deoplete#sources#clang#clang_header="/Applications/Xcode.app/COntents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang"
+endif
+if has('unix')
+  let g:deoplete#sources#clang#libclang_path="/usr/lib/llvm-3.8/lib/libclang.so.1"
+  let g:deoplete#sources#clang#clang_header="/usr/include/clang"
+endif
 "}}}
 
 "}}}

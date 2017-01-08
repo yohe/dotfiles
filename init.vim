@@ -92,6 +92,9 @@ set modeline
 set modelines=5
 set completeopt-=preview
 set clipboard+=unnamed
+
+let g:python3_host_prog = '/usr/binpython'
+let g:python3_host_prog = 'python'
 "}}}
 
 
@@ -130,6 +133,7 @@ call dein#add('Shougo/neomru.vim')
 call dein#add('Shougo/denite.nvim')
 call dein#add('Shougo/vimproc')
 call dein#add('zchee/deoplete-clang')
+call dein#add('zchee/deoplete-jedi')
 
 call dein#end()
 
@@ -271,6 +275,12 @@ if has('unix')
   let g:deoplete#sources#clang#libclang_path="/usr/lib/llvm-3.8/lib/libclang.so.1"
   let g:deoplete#sources#clang#clang_header="/usr/include/clang"
 endif
+"}}}
+
+" ============== deoplete jedi ==================== {{{2
+"let g:deoplete#sources#jedi#show_docstring = 1
+let g:deoplete#sources#jedi#python_path = 'python'
+"let g:deoplete#sources#jedi#extra_path = ''
 "}}}
 
 "}}}
